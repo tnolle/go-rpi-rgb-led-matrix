@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0e8fc07d-cee8-4040-ba3c-a26bcac98e50" name="piz">
+        <fileTransfer rootFolder="/home/tnolle/go-rpi-rgb-led-matrix/3rdparty/rpi-rgb-led-matrix" accessType="SFTP" host="piz" port="22" sshConfigId="cb03d673-c68e-438d-a561-0abcbe00a827" sshConfig="tnolle@piz:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
