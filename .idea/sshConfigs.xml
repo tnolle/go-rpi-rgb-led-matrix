@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="OPEN_SSH" host="piz2" id="0622c8a5-2164-439e-b38c-dc26daa7c8b5" port="22" nameFormat="DESCRIPTIVE" username="tnolle" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

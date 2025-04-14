@@ -1,8 +1,8 @@
 package rgbmatrix
 
 /*
-#cgo CFLAGS: -std=c99 -I${SRCDIR}/vendor/rpi-rgb-led-matrix/include -DSHOW_REFRESH_RATE
-#cgo LDFLAGS: -lrgbmatrix -L${SRCDIR}/vendor/rpi-rgb-led-matrix/lib -lstdc++ -lm
+#cgo CFLAGS: -std=c99 -I${SRCDIR}/3rdparty/rpi-rgb-led-matrix/include -DSHOW_REFRESH_RATE
+#cgo LDFLAGS: -lrgbmatrix -L${SRCDIR}/3rdparty/rpi-rgb-led-matrix/lib -lstdc++ -lm
 #include <led-matrix-c.h>
 
 void led_matrix_swap(struct RGBLedMatrix *matrix, struct LedCanvas *offscreen_canvas,
@@ -43,48 +43,76 @@ import (
 	"os"
 	"unsafe"
 
-	"github.com/mcuadros/go-rpi-rgb-led-matrix/emulator"
+	"github.com/tnolle/go-rpi-rgb-led-matrix/emulator"
 )
 
+type RuntimeOptions struct {
+	// GPIOSlowdown is the slowdown factor for GPIO access.
+	GPIOSlowdown int
+}
+
+func (r *RuntimeOptions) toC() *C.struct_RGBLedRuntimeOptions {
+	o := &C.struct_RGBLedRuntimeOptions{}
+	o.gpio_slowdown = C.int(r.GPIOSlowdown)
+	return o
+}
+
 // DefaultConfig default WS281x configuration
-var DefaultConfig = HardwareConfig{
+var DefaultConfig = MatrixOptions{
+	HardwareMapping:   "regular",
 	Rows:              32,
 	Cols:              32,
 	ChainLength:       1,
 	Parallel:          1,
 	PWMBits:           11,
+	PWMDitherBits:     0,
 	PWMLSBNanoseconds: 130,
 	Brightness:        100,
 	ScanMode:          Progressive,
 }
 
-// HardwareConfig rgb-led-matrix configuration
-type HardwareConfig struct {
+// MatrixOptions rgb-led-matrix configuration
+type MatrixOptions struct {
 	// Rows the number of rows supported by the display, so 32 or 16.
 	Rows int
 	// Cols the number of columns supported by the display, so 32 or 64 .
 	Cols int
-	// ChainLengthis the number of displays daisy-chained together
+
+	// ChainLength is the number of displays daisy-chained together
 	// (output of one connected to input of next).
 	ChainLength int
+
 	// Parallel is the number of parallel chains connected to the Pi; in old Pis
 	// with 26 GPIO pins, that is 1, in newer Pis with 40 interfaces pins, that
 	// can also be 2 or 3. The effective number of pixels in vertical direction is
 	// then thus rows * parallel.
 	Parallel int
+
 	// Set PWM bits used for output. Default is 11, but if you only deal with
 	// limited comic-colors, 1 might be sufficient. Lower require less CPU and
 	// increases refresh-rate.
 	PWMBits int
+
 	// Change the base time-unit for the on-time in the lowest significant bit in
 	// nanoseconds.  Higher numbers provide better quality (more accurate color,
 	// less ghosting), but have a negative impact on the frame rate.
 	PWMLSBNanoseconds int // the DMA channel to use
+
+	// The lower bits can be time-dithered for higher refresh rate.
+	// Flag: --led-pwm-dither-bits
+	PWMDitherBits int
+
 	// Brightness is the initial brightness of the panel in percent. Valid range
 	// is 1..100
 	Brightness int
+
 	// ScanMode progressive or interlaced
 	ScanMode ScanMode // strip color layout
+
+	RowAddressType int
+
+	Multiplexing int
+
 	// Disable the PWM hardware subsystem to create pulses. Typically, you don't
 	// want to disable hardware pulsing, this is mostly for debugging and figuring
 	// out if there is interference with the sound system.
@@ -99,11 +127,11 @@ type HardwareConfig struct {
 	HardwareMapping string
 }
 
-func (c *HardwareConfig) geometry() (width, height int) {
+func (c *MatrixOptions) geometry() (width, height int) {
 	return c.Cols * c.ChainLength, c.Rows * c.Parallel
 }
 
-func (c *HardwareConfig) toC() *C.struct_RGBLedMatrixOptions {
+func (c *MatrixOptions) toC() *C.struct_RGBLedMatrixOptions {
 	o := &C.struct_RGBLedMatrixOptions{}
 	o.rows = C.int(c.Rows)
 	o.cols = C.int(c.Cols)
@@ -111,8 +139,11 @@ func (c *HardwareConfig) toC() *C.struct_RGBLedMatrixOptions {
 	o.parallel = C.int(c.Parallel)
 	o.pwm_bits = C.int(c.PWMBits)
 	o.pwm_lsb_nanoseconds = C.int(c.PWMLSBNanoseconds)
+	o.pwm_dither_bits = C.int(c.PWMDitherBits)
 	o.brightness = C.int(c.Brightness)
 	o.scan_mode = C.int(c.ScanMode)
+	o.row_address_type = C.int(c.RowAddressType)
+	o.multiplexing = C.int(c.Multiplexing)
 	o.hardware_mapping = C.CString(c.HardwareMapping)
 
 	if c.ShowRefreshRate == true {
@@ -145,7 +176,7 @@ const (
 
 // RGBLedMatrix matrix representation for ws281x
 type RGBLedMatrix struct {
-	Config *HardwareConfig
+	Config *MatrixOptions
 
 	height int
 	width  int
@@ -157,7 +188,7 @@ type RGBLedMatrix struct {
 const MatrixEmulatorENV = "MATRIX_EMULATOR"
 
 // NewRGBLedMatrix returns a new matrix using the given size and config
-func NewRGBLedMatrix(config *HardwareConfig) (c Matrix, err error) {
+func NewRGBLedMatrix(opts *MatrixOptions, rOpts *RuntimeOptions) (c Matrix, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			var ok bool
@@ -169,14 +200,14 @@ func NewRGBLedMatrix(config *HardwareConfig) (c Matrix, err error) {
 	}()
 
 	if isMatrixEmulator() {
-		return buildMatrixEmulator(config), nil
+		return buildMatrixEmulator(opts), nil
 	}
 
-	w, h := config.geometry()
-	m := C.led_matrix_create_from_options(config.toC(), nil, nil)
+	w, h := opts.geometry()
+	m := C.led_matrix_create_from_options(opts.toC(), nil, nil)
 	b := C.led_matrix_create_offscreen_canvas(m)
 	c = &RGBLedMatrix{
-		Config: config,
+		Config: opts,
 		width:  w, height: h,
 		matrix: m,
 		buffer: b,
@@ -197,7 +228,7 @@ func isMatrixEmulator() bool {
 	return false
 }
 
-func buildMatrixEmulator(config *HardwareConfig) Matrix {
+func buildMatrixEmulator(config *MatrixOptions) Matrix {
 	w, h := config.geometry()
 	return emulator.NewEmulator(w, h, emulator.DefaultPixelPitch, true)
 }
