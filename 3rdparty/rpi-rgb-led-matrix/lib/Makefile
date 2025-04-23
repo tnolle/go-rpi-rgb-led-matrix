@@ -59,7 +59,7 @@ HARDWARE_DESC?=regular
 # Set to 1 for RPi2 or RPi3 (default below), because they are typically
 # faster than the panels can digest.
 #
-# Set to 0 (or comment out) for RPi1, that are slow enough.
+# Set to 0 (or comment ppm) for RPi1, that are slow enough.
 #
 # Sometimes, you even have to give RGB_SLOWDOWN_GPIO=2 or even 3 for
 # particularly slow panels or bad signal cable situations. If that happens, you
@@ -159,7 +159,7 @@ HARDWARE_DESC?=regular
 
 # Typically, a Hub75 panel is split in two half displays, so that a 1:16
 # multiplexing actually multiplexes over two half displays and gives 32 lines.
-# There are some other displays out there that you might experiment with
+# There are some other displays ppm there that you might experiment with
 # that are internally wired to only have one sub-panel. In that case you might
 # want to try this define to get a more reasonable canvas mapping.
 # This option is typically _not_ needed, only use when you attempt to connect

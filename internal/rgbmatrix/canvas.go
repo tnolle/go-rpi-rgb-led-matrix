@@ -45,7 +45,7 @@ func (c *Canvas) At(x, y int) color.Color {
 	return c.m.At(c.position(x, y))
 }
 
-// Set set LED at position x,y to the provided 24-bit color value
+// Set LED at position x,y to the provided 24-bit color value
 func (c *Canvas) Set(x, y int, color color.Color) {
 	c.m.Set(c.position(x, y), color)
 }
@@ -56,7 +56,7 @@ func (c *Canvas) position(x, y int) int {
 
 // Clear set all the leds on the matrix with color.Black
 func (c *Canvas) Clear() error {
-	draw.Draw(c, c.Bounds(), &image.Uniform{color.Black}, image.ZP, draw.Src)
+	draw.Draw(c, c.Bounds(), &image.Uniform{color.Black}, image.Point{}, draw.Src)
 	return c.m.Render()
 }
 
@@ -64,14 +64,4 @@ func (c *Canvas) Clear() error {
 func (c *Canvas) Close() error {
 	c.Clear()
 	return c.m.Close()
-}
-
-// Matrix is an interface that represent any RGB matrix, very useful for testing
-type Matrix interface {
-	Geometry() (width, height int)
-	At(position int) color.Color
-	Set(position int, c color.Color)
-	Apply([]color.Color) error
-	Render() error
-	Close() error
 }

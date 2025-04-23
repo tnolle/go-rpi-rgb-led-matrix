@@ -1,9 +1,10 @@
-package emulator
+package rgbmatrix
 
 import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"os"
 	"sync"
 
@@ -28,12 +29,15 @@ type Emulator struct {
 	leds []color.Color
 	w    screen.Window
 	s    screen.Screen
-	wg   sync.WaitGroup
+	sz   image.Rectangle
+	mu   sync.Mutex
+
+	cb func()
 
 	isReady bool
 }
 
-func NewEmulator(w, h, pixelPitch int, autoInit bool) *Emulator {
+func NewEmulator(w, h, pixelPitch int) *Emulator {
 	e := &Emulator{
 		Width:                   w,
 		Height:                  h,
@@ -43,21 +47,15 @@ func NewEmulator(w, h, pixelPitch int, autoInit bool) *Emulator {
 	}
 	e.updatePixelPitchForGutter(pixelPitch / e.PixelPitchToGutterRatio)
 
-	if autoInit {
-		e.Init()
-	}
-
 	return e
 }
 
-// Init initialize the emulator, creating a new Window and waiting until is
+// Run initialize the emulator, creating a new Window and waiting until is
 // painted. If something goes wrong the function panics
-func (e *Emulator) Init() {
+func (e *Emulator) Run(cb func()) {
 	e.leds = make([]color.Color, e.Width*e.Height)
-
-	e.wg.Add(1)
-	go driver.Main(e.mainWindowLoop)
-	e.wg.Wait()
+	e.cb = cb
+	driver.Main(e.mainWindowLoop)
 }
 
 func (e *Emulator) mainWindowLoop(s screen.Screen) {
@@ -88,10 +86,13 @@ func (e *Emulator) mainWindowLoop(s screen.Screen) {
 			}
 
 			e.Apply(make([]color.Color, e.Width*e.Height))
-			e.wg.Done()
 			e.isReady = true
+			go e.cb()
 		case size.Event:
+			e.mu.Lock()
 			sz = evn
+			e.sz = evn.Bounds()
+			e.mu.Unlock()
 
 		case error:
 			fmt.Fprintln(os.Stderr, e)
@@ -171,14 +172,28 @@ func (e *Emulator) Geometry() (width, height int) {
 func (e *Emulator) Apply(leds []color.Color) error {
 	defer func() { e.leds = make([]color.Color, e.Height*e.Width) }()
 
-	var c color.Color
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	var buf screen.Buffer
+	buf, err := e.s.NewBuffer(e.sz.Size())
+	if err != nil {
+		return fmt.Errorf("failed to create buffer: %w", err)
+	}
+	defer buf.Release()
+
+	img := buf.RGBA()
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.Black}, image.Point{}, draw.Src)
+	draw.Draw(img, e.matrixWithMarginsRect(), &image.Uniform{e.GutterColor}, image.Point{}, draw.Src)
+
 	for col := 0; col < e.Width; col++ {
 		for row := 0; row < e.Height; row++ {
-			c = e.At(col + (row * e.Width))
-			e.w.Fill(e.ledRect(col, row), c, screen.Over)
+			c := e.At(col + (row * e.Width))
+			rect := e.ledRect(col, row)
+			draw.Draw(img, rect, &image.Uniform{c}, image.Point{}, draw.Over)
 		}
 	}
-
+	e.w.Upload(image.Point{}, buf, buf.Bounds())
 	e.w.Publish()
 	return nil
 }

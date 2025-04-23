@@ -1,0 +1,9 @@
+services:
+  arm64:
+    image: golang
+    platform: linux/arm64
+    tty: true
+    restart: always
+    working_dir: /src
+    volumes:
+      - ../..:/src

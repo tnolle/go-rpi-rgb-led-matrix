@@ -6,7 +6,7 @@ OPTIONAL_OBJECTS=video-viewer.o
 OPTIONAL_BINARIES=video-viewer
 
 # Where our library resides. You mostly only need to change the
-# RGB_LIB_DISTRIBUTION, this is where the library is checked out.
+# RGB_LIB_DISTRIBUTION, this is where the library is checked ppm.
 RGB_LIB_DISTRIBUTION=..
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib

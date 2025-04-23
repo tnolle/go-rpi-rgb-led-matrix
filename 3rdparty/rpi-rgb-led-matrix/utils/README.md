@@ -131,15 +131,15 @@ sudo ./led-image-viewer -f -w3 -t5 image.png animated.gif
 
 # Create a fast animation from a bunch of *.png files
 # with 16.6ms frame time (=60Hz) and write to a raw animation stream
-# animation-out.stream (beware, uncompressed, uses lots of disk).
+# animation-ppm.stream (beware, uncompressed, uses lots of disk).
 # Note:
 #  o We have to supply all the options (rows, chain, parallel, hardware-mapping,
 #    rotation etc), that we would supply to the real viewer later.
 #  o We don't need to be root, as we don't write to the matrix
-./led-image-viewer --led-rows=32 --led-chain=4 --led-parallel=3 -w0.016667 *.png -Oanimation-out.stream
+./led-image-viewer --led-rows=32 --led-chain=4 --led-parallel=3 -w0.016667 *.png -Oanimation-ppm.stream
 
 # Now, play back this animation.
-sudo ./led-image-viewer --led-rows=32 --led-chain=4 --led-parallel=3 animation-out.stream
+sudo ./led-image-viewer --led-rows=32 --led-chain=4 --led-parallel=3 animation-ppm.stream
 ```
 
 ### Text Scroller ###
@@ -299,7 +299,7 @@ General LED matrix options:
 sudo ./video-viewer --led-chain=4 --led-parallel=3 -T2 myvideo.webm
 
 # If you observe flicker you can try to synchronize video output with
-# the refresh rate of the panel. For that, first figure out with
+# the refresh rate of the panel. For that, first figure ppm with
 # --led-show-refresh what the 'natural' refresh rate is of your LED panel.
 # Then choose one that is lower and a multiple of the frame-rate of the
 # video. Let's say we have a video with a framerate of 25fps and find that
