@@ -18,6 +18,7 @@ func Clock(screen *rgbmatrix.Screen) *ClockRenderer {
 }
 
 func (r *ClockRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+	h := float64(r.screen.Canvas.Bounds().Dy() / 2)
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	for {
 		select {
@@ -32,11 +33,11 @@ func (r *ClockRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error
 
 			// Outer circle
 			dc.SetRGB(.5, .5, .5)
-			dc.DrawCircle(32, 32, 30)
+			dc.DrawCircle(h, h, h-2)
 			for a := range 12 {
 				angle := float64(a) / 12 * 360
-				p1 := pointOnCircle(gg.Point{X: 32, Y: 32}, 24, angle-90)
-				p2 := pointOnCircle(gg.Point{X: 32, Y: 32}, 30, angle-90)
+				p1 := pointOnCircle(gg.Point{X: h, Y: h}, h-8, angle-90)
+				p2 := pointOnCircle(gg.Point{X: h, Y: h}, h-2, angle-90)
 				dc.DrawLine(p1.X, p1.Y, p2.X, p2.Y)
 			}
 			dc.Stroke()
@@ -48,20 +49,20 @@ func (r *ClockRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error
 
 			// Hour hand
 			dc.SetRGB(1, 1, 1)
-			p := pointOnCircle(gg.Point{X: 32, Y: 32}, 16, hours*360-90)
-			dc.DrawLine(32, 32, p.X, p.Y)
+			p := pointOnCircle(gg.Point{X: h, Y: h}, h*1/2, hours*360-90)
+			dc.DrawLine(h, h, p.X, p.Y)
 			dc.Stroke()
 
 			// Minute hand
 			dc.SetRGB(1, 1, 1)
-			p = pointOnCircle(gg.Point{X: 32, Y: 32}, 24, minutes*360-90)
-			dc.DrawLine(32, 32, p.X, p.Y)
+			p = pointOnCircle(gg.Point{X: h, Y: h}, h*3/4, minutes*360-90)
+			dc.DrawLine(h, h, p.X, p.Y)
 			dc.Stroke()
 
 			// Second hand
 			dc.SetRGB(1, 0, 0)
-			p = pointOnCircle(gg.Point{X: 32, Y: 32}, 26, seconds*360-90)
-			dc.DrawLine(32, 32, p.X, p.Y)
+			p = pointOnCircle(gg.Point{X: h, Y: h}, h*4/5, seconds*360-90)
+			dc.DrawLine(h, h, p.X, p.Y)
 			dc.Stroke()
 
 			r.screen.ShowImage(ctx, dc.Image())

@@ -8,6 +8,6 @@ build:
 	go build -tags with_cgo -o .bin/led cmd/main.go
 
 deploy:
-	ssh piz sudo systemctl stop led
-	scp -C .bin/led tnolle@192.168.0.26:/home/tnolle/led/led
-	ssh piz sudo systemctl start led
+	ssh pi4 sudo systemctl stop led
+	scp -C .bin/led pi4:/home/tnolle/led/led
+	ssh pi4 sudo systemctl start led

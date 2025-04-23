@@ -22,6 +22,7 @@ type DashboardName string
 const (
 	DashboardClock     DashboardName = "clock"
 	DashboardUserCount DashboardName = "user-count"
+	DasboardShopify    DashboardName = "shopify"
 )
 
 type AnimationName string

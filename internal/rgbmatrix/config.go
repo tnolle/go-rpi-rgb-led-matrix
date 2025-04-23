@@ -12,6 +12,13 @@ type Config struct {
 		ClientID     string `toml:"client_id"`
 		ClientSecret string `toml:"client_secret"`
 	} `toml:"auth"`
+	Shopify struct {
+		TotalSales   string `toml:"total_sales"`
+		TotalOrders  string `toml:"total_orders"`
+		MonthlySales string `toml:"monthly_sales"`
+		TodaySales   string `toml:"today_sales"`
+		TodayOrders  string `toml:"today_orders"`
+	}
 	Options        MatrixOptions  `toml:"options"`
 	RuntimeOptions RuntimeOptions `toml:"runtime_options"`
 }

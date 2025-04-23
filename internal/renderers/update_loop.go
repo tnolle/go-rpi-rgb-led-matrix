@@ -14,7 +14,7 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 	defer s.Close()
 
 	//go func() { commands <- Command{Type: TypeImage, Name: "autodarts"} }()
-	go func() { commands <- Command{Type: TypeDashboard, Name: string(DashboardUserCount)} }()
+	go func() { commands <- Command{Type: TypeDashboard, Name: string(DasboardShopify)} }()
 
 	renderCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -51,6 +51,8 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 					go Clock(s).Render(renderCtx)
 				case DashboardUserCount:
 					go UserCountDashboard(s).Render(renderCtx)
+				case DasboardShopify:
+					go ShopifyDashboard(s).Render(renderCtx)
 				}
 
 			case TypeAnimation:
@@ -139,7 +141,7 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 }
 
 func UpdateLoopEmulated(ctx context.Context, commands chan Command, config rgbmatrix.Config) {
-	m := rgbmatrix.NewEmulator(64*2, 64*1, 12)
+	m := rgbmatrix.NewEmulator(64*3, 32*3, 12)
 	m.Run(func() { updateLoop(ctx, commands, m) })
 }
 
