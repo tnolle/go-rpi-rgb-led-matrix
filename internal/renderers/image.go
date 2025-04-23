@@ -17,7 +17,7 @@ func Image(screen *rgbmatrix.Screen, path string) *ImageRenderer {
 	return &ImageRenderer{screen: screen, path: path}
 }
 
-func (r *ImageRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *ImageRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	img, err := fs.LoadPNG(fmt.Sprintf("images/pngs/%s.png", r.path))
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func GIFLoop(screen *rgbmatrix.Screen, path string) *GIFLoopRenderer {
 	return &GIFLoopRenderer{screen: screen, path: path}
 }
 
-func (r *GIFLoopRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *GIFLoopRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	img, err := fs.LoadGIF(fmt.Sprintf("images/gifs/%s.gif", r.path))
 	if err != nil {
 		return err

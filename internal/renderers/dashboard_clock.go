@@ -17,7 +17,7 @@ func Clock(screen *rgbmatrix.Screen) *ClockRenderer {
 	return &ClockRenderer{screen: screen}
 }
 
-func (r *ClockRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *ClockRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	h := float64(r.screen.Canvas.Bounds().Dy() / 2)
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	for {

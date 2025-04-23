@@ -2,10 +2,13 @@ package renderers
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"time"
 
 	"github.com/fogleman/gg"
+	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/renderers/animation"
+	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/renderers/dashboard"
 	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/rgbmatrix"
 )
 
@@ -13,8 +16,8 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 	s := rgbmatrix.NewScreen(m)
 	defer s.Close()
 
-	//go func() { commands <- Command{Type: TypeImage, Name: "autodarts"} }()
-	go func() { commands <- Command{Type: TypeDashboard, Name: string(DasboardShopify)} }()
+	//go func() { commands <- Command{ScreenType: TypeImage, Name: "autodarts"} }()
+	go func() { commands <- Command{Type: TypeDashboard, Name: dashboard.Shopify.String()} }()
 
 	renderCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -46,92 +49,104 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 				GIFOnce(s, cmd.Name).Render(renderCtx, resetScreen)
 
 			case TypeDashboard:
-				switch DashboardName(cmd.Name) {
-				case DashboardClock:
+				v, err := dashboard.DashboardString(cmd.Name)
+				if err != nil {
+					fmt.Printf("Error: %s\n", err)
+					continue
+				}
+
+				switch v {
+				case dashboard.Clock:
 					go Clock(s).Render(renderCtx)
-				case DashboardUserCount:
+				case dashboard.Autodarts:
 					go UserCountDashboard(s).Render(renderCtx)
-				case DasboardShopify:
+				case dashboard.Shopify:
 					go ShopifyDashboard(s).Render(renderCtx)
 				}
 
 			case TypeAnimation:
-				switch AnimationName(cmd.Name) {
-				case AnimationAurora:
+				v, err := animation.AnimationString(cmd.Name)
+				if err != nil {
+					fmt.Printf("Error: %s\n", err)
+					continue
+				}
+
+				switch v {
+				case animation.Aurora:
 					go Aurora(s).Render(renderCtx)
-				case AnimationCheckerboard:
+				case animation.Checkerboard:
 					go Checkerboard(s).Render(renderCtx)
-				case AnimationColorWave:
+				case animation.ColorWave:
 					go ColorWave(s).Render(renderCtx)
-				case AnimationBlobbyFusion:
+				case animation.BlobbyFusion:
 					go BlobbyFusion(s).Render(renderCtx)
-				case AnimationFirefly:
+				case animation.Firefly:
 					go Firefly(s).Render(renderCtx)
-				case AnimationKaleidoscope:
+				case animation.Kaleidoscope:
 					go Kaleidoscope(s).Render(renderCtx)
-				case AnimationLavaLamp:
+				case animation.LavaLamp:
 					go LavaLamp(s).Render(renderCtx)
-				case AnimationLightning:
+				case animation.Lightning:
 					go Lightning(s).Render(renderCtx)
-				case AnimationMandelbrot:
+				case animation.Mandelbrot:
 					go Mandelbrot(s).Render(renderCtx)
-				case AnimationMatrixRain:
+				case animation.MatrixRain:
 					go MatrixRain(s).Render(renderCtx)
-				case AnimationNebula:
+				case animation.Nebula:
 					go Nebula(s).Render(renderCtx)
-				case AnimationPlasma:
+				case animation.Plasma:
 					go Plasma(s).Render(renderCtx)
-				case AnimationRadarSweep:
+				case animation.RadarSweep:
 					go RadarSweep(s).Render(renderCtx)
-				case AnimationRipple:
+				case animation.Ripple:
 					go Ripple(s).Render(renderCtx)
-				case AnimationSpectrum:
+				case animation.Spectrum:
 					go Spectrum(s).Render(renderCtx)
-				case AnimationSpiral:
+				case animation.Spiral:
 					go Spiral(s).Render(renderCtx)
-				case AnimationStarfield:
+				case animation.Starfield:
 					go Starfield(s).Render(renderCtx)
-				case AnimationTunnel:
+				case animation.Tunnel:
 					go Tunnel(s).Render(renderCtx)
-				case AnimationVortex:
+				case animation.Vortex:
 					go Vortex(s).Render(renderCtx)
-				case AnimationPixelBloom:
+				case animation.PixelBloom:
 					go PixelBloom(s).Render(renderCtx)
-				case AnimationRGBFlow:
+				case animation.RGBFlow:
 					go RGBFlow(s).Render(renderCtx)
-				case AnimationGlitch:
+				case animation.Glitch:
 					go Glitch(s).Render(renderCtx)
-				case AnimationHypnoticRings:
+				case animation.HypnoticRings:
 					go HypnoticRings(s).Render(renderCtx)
-				case AnimationSpinningGrid:
+				case animation.SpinningGrid:
 					go SpinningGrid(s).Render(renderCtx)
-				case AnimationHexPulse:
+				case animation.HexPulse:
 					go HexPulse(s).Render(renderCtx)
-				case AnimationSnakeTrail:
+				case animation.SnakeTrail:
 					go SnakeTrail(s).Render(renderCtx)
-				case AnimationExplosionBurst:
+				case animation.ExplosionBurst:
 					go ExplosionBurst(s).Render(renderCtx)
-				case AnimationBeatGrid:
+				case animation.BeatGrid:
 					go BeatGrid(s).Render(renderCtx)
-				case AnimationAudioOrbit:
+				case animation.AudioOrbit:
 					go AudioOrbit(s).Render(renderCtx)
-				case AnimationAuroraCurtains:
+				case animation.AuroraCurtains:
 					go AuroraCurtains(s).Render(renderCtx)
-				case AnimationUlamSpiral:
+				case animation.UlamSpiral:
 					go UlamSpiral(s).Render(renderCtx)
-				case AnimationGameOfLife:
+				case animation.GameOfLife:
 					go GameOfLife(s).Render(renderCtx)
-				case AnimationVectorFieldFlow:
+				case animation.VectorFieldFlow:
 					go VectorFieldFlow(s).Render(renderCtx)
-				case AnimationSierpinskiTriangle:
+				case animation.SierpinskiTriangle:
 					go SierpinskiTriangle(s).Render(renderCtx)
-				case AnimationFluidDream:
+				case animation.FluidDream:
 					go FluidDream(s).Render(renderCtx)
-				case AnimationFluidRainbow:
+				case animation.FluidRainbow:
 					go FluidRainbow(s).Render(renderCtx)
-				case AnimationOrbitingMetaballs:
+				case animation.OrbitingMetaballs:
 					go OrbitingMetaballs(s).Render(renderCtx)
-				case AnimationMarbleShader:
+				case animation.MarbleShader:
 					go MarbleShader(s).Render(renderCtx)
 				}
 
@@ -141,7 +156,8 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 }
 
 func UpdateLoopEmulated(ctx context.Context, commands chan Command, config rgbmatrix.Config) {
-	m := rgbmatrix.NewEmulator(64*3, 32*3, 12)
+	fmt.Printf("Emulating a %dx%d matrix\n", config.Options.Cols*config.Options.ChainLength, config.Options.Rows*config.Options.Parallel)
+	m := rgbmatrix.NewEmulator(config.Options.Cols*config.Options.ChainLength, config.Options.Rows*config.Options.Parallel, 8)
 	m.Run(func() { updateLoop(ctx, commands, m) })
 }
 

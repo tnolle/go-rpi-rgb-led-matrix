@@ -11,3 +11,6 @@ deploy:
 	ssh pi4 sudo systemctl stop led
 	scp -C .bin/led pi4:/home/tnolle/led/led
 	ssh pi4 sudo systemctl start led
+	ssh piz sudo systemctl stop led
+	scp -C .bin/led piz:/home/tnolle/led/led
+	ssh piz sudo systemctl start led

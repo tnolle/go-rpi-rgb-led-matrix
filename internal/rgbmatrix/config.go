@@ -19,6 +19,9 @@ type Config struct {
 		TodaySales   string `toml:"today_sales"`
 		TodayOrders  string `toml:"today_orders"`
 	}
+	Dashboards struct {
+		Font string `toml:"font"`
+	} `toml:"dashboards"`
 	Options        MatrixOptions  `toml:"options"`
 	RuntimeOptions RuntimeOptions `toml:"runtime_options"`
 }
@@ -49,6 +52,15 @@ func LoadConfig() Config {
 	}
 	if config.Options.ScanMode == 0 {
 		config.Options.ScanMode = Progressive
+	}
+	if config.Options.ChainLength == 0 {
+		config.Options.ChainLength = 1
+	}
+	if config.Options.Parallel == 0 {
+		config.Options.Parallel = 1
+	}
+	if config.Dashboards.Font == "" {
+		config.Dashboards.Font = "fonts/7x14.bdf"
 	}
 
 	return config

@@ -18,7 +18,7 @@ func BeatGrid(screen *rgbmatrix.Screen) *BeatGridRenderer {
 	return &BeatGridRenderer{screen: screen}
 }
 
-func (r *BeatGridRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *BeatGridRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -62,7 +62,7 @@ func RGBFlow(screen *rgbmatrix.Screen) *RGBFlowRenderer {
 	return &RGBFlowRenderer{screen: screen}
 }
 
-func (r *RGBFlowRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *RGBFlowRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	start := time.Now()
@@ -96,7 +96,7 @@ func PixelBloom(screen *rgbmatrix.Screen) *PixelBloomRenderer {
 	return &PixelBloomRenderer{screen: screen}
 }
 
-func (r *PixelBloomRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *PixelBloomRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	cx, cy := w/2, h/2
@@ -135,7 +135,7 @@ func Glitch(screen *rgbmatrix.Screen) *GlitchRenderer {
 	return &GlitchRenderer{screen: screen}
 }
 
-func (r *GlitchRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *GlitchRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -173,7 +173,7 @@ func RadarSweep(screen *rgbmatrix.Screen) *RadarSweepRenderer {
 	return &RadarSweepRenderer{screen: screen}
 }
 
-func (r *RadarSweepRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *RadarSweepRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -239,7 +239,7 @@ func Nebula(screen *rgbmatrix.Screen) *NebulaRenderer {
 	return &NebulaRenderer{screen: screen}
 }
 
-func (r *NebulaRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *NebulaRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -294,7 +294,7 @@ func Aurora(screen *rgbmatrix.Screen) *AuroraRenderer {
 	return &AuroraRenderer{screen: screen}
 }
 
-func (r *AuroraRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *AuroraRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -342,7 +342,7 @@ func LavaLamp(screen *rgbmatrix.Screen) *LavaLampRenderer {
 	return &LavaLampRenderer{screen: screen}
 }
 
-func (r *LavaLampRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *LavaLampRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -391,7 +391,7 @@ func ColorWave(screen *rgbmatrix.Screen) *ColorWaveRenderer {
 	return &ColorWaveRenderer{screen: screen}
 }
 
-func (r *ColorWaveRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *ColorWaveRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -441,7 +441,7 @@ func Plasma(screen *rgbmatrix.Screen) *PlasmaRenderer {
 	return &PlasmaRenderer{screen: screen}
 }
 
-func (r *PlasmaRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *PlasmaRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -487,7 +487,7 @@ func Ripple(screen *rgbmatrix.Screen) *RippleRenderer {
 	return &RippleRenderer{screen: screen}
 }
 
-func (r *RippleRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *RippleRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -537,7 +537,7 @@ func Spiral(screen *rgbmatrix.Screen) *SpiralRenderer {
 	return &SpiralRenderer{screen: screen}
 }
 
-func (r *SpiralRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *SpiralRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -609,7 +609,7 @@ func Tunnel(screen *rgbmatrix.Screen) *TunnelRenderer {
 	return &TunnelRenderer{screen: screen}
 }
 
-func (r *TunnelRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *TunnelRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -660,7 +660,7 @@ func Spectrum(screen *rgbmatrix.Screen) *SpectrumRenderer {
 	return &SpectrumRenderer{screen: screen}
 }
 
-func (r *SpectrumRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *SpectrumRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := dc.Width()
 	height := dc.Height()
@@ -709,7 +709,7 @@ func Starfield(screen *rgbmatrix.Screen) *StarfieldRenderer {
 	return &StarfieldRenderer{screen: screen}
 }
 
-func (r *StarfieldRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *StarfieldRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	cx, cy := float64(w)/2, float64(h)/2
@@ -757,7 +757,7 @@ func Firefly(screen *rgbmatrix.Screen) *FireflyRenderer {
 	return &FireflyRenderer{screen: screen}
 }
 
-func (r *FireflyRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *FireflyRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	type Firefly struct{ x, y, dx, dy float64 }
@@ -799,7 +799,7 @@ func MatrixRain(screen *rgbmatrix.Screen) *MatrixRainRenderer {
 	return &MatrixRainRenderer{screen: screen}
 }
 
-func (r *MatrixRainRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *MatrixRainRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	drops := make([]int, w)
@@ -849,7 +849,7 @@ func Checkerboard(screen *rgbmatrix.Screen) *CheckerboardRenderer {
 	return &CheckerboardRenderer{screen: screen}
 }
 
-func (r *CheckerboardRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *CheckerboardRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	start := time.Now()
@@ -884,7 +884,7 @@ func Vortex(screen *rgbmatrix.Screen) *VortexRenderer {
 	return &VortexRenderer{screen: screen}
 }
 
-func (r *VortexRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *VortexRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	cx, cy := w/2, h/2
@@ -922,7 +922,7 @@ func Lightning(screen *rgbmatrix.Screen) *LightningRenderer {
 	return &LightningRenderer{screen: screen}
 }
 
-func (r *LightningRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *LightningRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	var lastFlash time.Time
@@ -969,7 +969,7 @@ func Mandelbrot(screen *rgbmatrix.Screen) *MandelbrotRenderer {
 	return &MandelbrotRenderer{screen: screen}
 }
 
-func (r *MandelbrotRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *MandelbrotRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	start := time.Now()
@@ -1014,7 +1014,7 @@ func BlobbyFusion(screen *rgbmatrix.Screen) *BlobbyFusionRenderer {
 	return &BlobbyFusionRenderer{screen: screen}
 }
 
-func (r *BlobbyFusionRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *BlobbyFusionRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	type Blob struct {
 		x, y, radius, dx, dy float64
 	}
@@ -1091,7 +1091,7 @@ func Kaleidoscope(screen *rgbmatrix.Screen) *KaleidoscopeRenderer {
 	return &KaleidoscopeRenderer{screen: screen}
 }
 
-func (r *KaleidoscopeRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *KaleidoscopeRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -1142,7 +1142,7 @@ func HypnoticRings(screen *rgbmatrix.Screen) *HypnoticRingsRenderer {
 	return &HypnoticRingsRenderer{screen: screen}
 }
 
-func (r *HypnoticRingsRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *HypnoticRingsRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	cx, cy := w/2, h/2
@@ -1180,7 +1180,7 @@ func SpinningGrid(screen *rgbmatrix.Screen) *SpinningGridRenderer {
 	return &SpinningGridRenderer{screen: screen}
 }
 
-func (r *SpinningGridRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *SpinningGridRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	cx, cy := w/2, h/2
@@ -1220,7 +1220,7 @@ func HexPulse(screen *rgbmatrix.Screen) *HexPulseRenderer {
 	return &HexPulseRenderer{screen: screen}
 }
 
-func (r *HexPulseRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *HexPulseRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	start := time.Now()
@@ -1263,7 +1263,7 @@ func SnakeTrail(screen *rgbmatrix.Screen) *SnakeTrailRenderer {
 	return &SnakeTrailRenderer{screen: screen}
 }
 
-func (r *SnakeTrailRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *SnakeTrailRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	type Point struct{ x, y int }
 
 	dc := gg.NewContextForImage(r.screen.Canvas)
@@ -1309,7 +1309,7 @@ func ExplosionBurst(screen *rgbmatrix.Screen) *ExplosionBurstRenderer {
 	return &ExplosionBurstRenderer{screen: screen}
 }
 
-func (r *ExplosionBurstRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *ExplosionBurstRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := float64(dc.Width()), float64(dc.Height())
 	cx, cy := w/2, h/2
@@ -1349,7 +1349,7 @@ func AudioOrbit(screen *rgbmatrix.Screen) *AudioOrbitRenderer {
 	return &AudioOrbitRenderer{screen: screen}
 }
 
-func (r *AudioOrbitRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *AudioOrbitRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
@@ -1396,7 +1396,7 @@ func AuroraCurtains(screen *rgbmatrix.Screen) *AuroraCurtainsRenderer {
 	return &AuroraCurtainsRenderer{screen: screen}
 }
 
-func (r *AuroraCurtainsRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *AuroraCurtainsRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -1455,7 +1455,7 @@ func isPrime(n int) bool {
 	return true
 }
 
-func (r *UlamSpiralRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *UlamSpiralRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	cx, cy := w/2, h/2
@@ -1506,7 +1506,7 @@ func GameOfLife(screen *rgbmatrix.Screen) *GameOfLifeRenderer {
 	return &GameOfLifeRenderer{screen: screen}
 }
 
-func (r *GameOfLifeRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *GameOfLifeRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w, h := dc.Width(), dc.Height()
 	grid := make([][]bool, h)
@@ -1578,7 +1578,7 @@ func VectorFieldFlow(screen *rgbmatrix.Screen) *VectorFieldFlowRenderer {
 	return &VectorFieldFlowRenderer{screen: screen}
 }
 
-func (r *VectorFieldFlowRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *VectorFieldFlowRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	type Particle struct{ x, y float64 }
 
 	dc := gg.NewContextForImage(r.screen.Canvas)
@@ -1647,7 +1647,7 @@ func SierpinskiTriangle(screen *rgbmatrix.Screen) *SierpinskiTriangleRenderer {
 	return &SierpinskiTriangleRenderer{screen: screen}
 }
 
-func (ren *SierpinskiTriangleRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (ren *SierpinskiTriangleRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	var drawTriangle func(dc *gg.Context, x1, y1, x2, y2, x3, y3 float64, depth int)
 
 	drawTriangle = func(dc *gg.Context, x1, y1, x2, y2, x3, y3 float64, depth int) {
@@ -1712,7 +1712,7 @@ func FluidDream(screen *rgbmatrix.Screen) *FluidDreamRenderer {
 	return &FluidDreamRenderer{screen: screen}
 }
 
-func (r *FluidDreamRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *FluidDreamRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -1771,7 +1771,7 @@ func FluidRainbow(screen *rgbmatrix.Screen) *FluidRainbowRenderer {
 	return &FluidRainbowRenderer{screen: screen}
 }
 
-func (r *FluidRainbowRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *FluidRainbowRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	width := float64(dc.Width())
 	height := float64(dc.Height())
@@ -1823,7 +1823,7 @@ func OrbitingMetaballs(screen *rgbmatrix.Screen) *OrbitingMetaballsRenderer {
 	return &OrbitingMetaballsRenderer{screen: screen}
 }
 
-func (r *OrbitingMetaballsRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *OrbitingMetaballsRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	type Blob struct {
 		radius float64
 		speed  float64
@@ -1892,7 +1892,7 @@ func MarbleShader(screen *rgbmatrix.Screen) *MarbleShaderRenderer {
 	return &MarbleShaderRenderer{screen: screen}
 }
 
-func (r *MarbleShaderRenderer) Render(ctx context.Context, cb ...AfterRenderFunc) error {
+func (r *MarbleShaderRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	dc := gg.NewContextForImage(r.screen.Canvas)
 	w := float64(dc.Width())
 	h := float64(dc.Height())
