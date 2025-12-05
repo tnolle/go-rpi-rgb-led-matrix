@@ -16,8 +16,8 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 	s := rgbmatrix.NewScreen(m)
 	defer s.Close()
 
-	//go func() { commands <- Command{ScreenType: TypeImage, Name: "autodarts"} }()
-	go func() { commands <- Command{Type: TypeDashboard, Name: dashboard.Shopify.String()} }()
+	go func() { commands <- Command{Type: TypeImage, Name: "autodarts"} }()
+	//go func() { commands <- Command{Type: TypeDashboard, Name: dashboard.Shopify.String()} }()
 
 	renderCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
