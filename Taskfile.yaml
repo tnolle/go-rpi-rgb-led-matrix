@@ -1,0 +1,21 @@
+version: '3'
+
+vars:
+  HOST: led
+
+tasks:
+  build:
+    cmds:
+      - docker exec rgbmatrix-build-arm64-1 make build
+      - chmod +x .bin/led
+
+  deploy:
+    cmds:
+      - ssh {{.HOST}} sudo systemctl stop led
+      - scp -C .bin/led {{.HOST}}:/home/tnolle/led/led
+      - ssh {{.HOST}} sudo systemctl start led
+
+  dist:
+    cmds:
+      - task: build
+      - task: deploy
