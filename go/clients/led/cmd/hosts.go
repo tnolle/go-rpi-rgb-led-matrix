@@ -35,7 +35,7 @@ var hostsCmd = &cobra.Command{
 			}
 		}
 	},
-	Args: cobra.ExactArgs(1),
+	Args: cobra.NoArgs,
 }
 
 var hostsAddCmd = &cobra.Command{

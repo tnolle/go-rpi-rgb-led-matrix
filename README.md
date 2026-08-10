@@ -5,9 +5,8 @@ This repository contains the current Go applications and will host their gradual
 ## Layout
 
 - `go/servers/rpi`: production Raspberry Pi server
-- `go/servers/emulator`: macOS emulator server
 - `go/servers/terminal`: true-color terminal emulator server
-- `go/clients/cli`: command-line client
+- `go/clients/led`: command-line client
 - `go/internal`: packages shared by the Go applications
 - `rust`: incremental Rust replacements and new clients
 - `assets`: tracked assets such as fonts
@@ -20,10 +19,19 @@ The root `go.work` file makes it possible to run Go commands from the repository
 ## Development
 
 ```sh
-go run ./go/servers/emulator
 go run ./go/servers/terminal
-go run ./go/clients/cli --help
+go run ./go/clients/led --help
 go test ./go/...
+```
+
+The CLI reads available content from the selected server:
+
+```sh
+go run ./go/clients/led list
+go run ./go/clients/led list image
+go run ./go/clients/led list gif
+go run ./go/clients/led list dashboard
+go run ./go/clients/led list animation
 ```
 
 The emulator expects `config.toml` and image assets under `images`. Both are intentionally ignored by Git.

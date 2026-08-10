@@ -8,17 +8,13 @@ tasks:
     cmds:
       - go test ./go/...
 
-  emulator:
-    cmds:
-      - go run ./go/servers/emulator
-
   terminal:
     cmds:
       - go run ./go/servers/terminal
 
   cli:
     cmds:
-      - go run ./go/clients/cli -- {{.CLI_ARGS}}
+      - go run ./go/clients/led -- {{.CLI_ARGS}}
 
   build:
     cmds:

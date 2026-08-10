@@ -156,12 +156,6 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 	}
 }
 
-func UpdateLoopEmulated(ctx context.Context, commands chan Command, config rgbmatrix.Config) {
-	fmt.Printf("Emulating a %dx%d matrix\n", config.Options.Cols*config.Options.ChainLength, config.Options.Rows*config.Options.Parallel)
-	m := rgbmatrix.NewEmulator(config.Options.Cols*config.Options.ChainLength, config.Options.Rows*config.Options.Parallel, 8)
-	m.Run(func() { updateLoop(ctx, commands, m) })
-}
-
 func UpdateLoopTerminal(ctx context.Context, commands chan Command, config rgbmatrix.Config) {
 	width := config.Options.Cols * config.Options.ChainLength
 	height := config.Options.Rows * config.Options.Parallel
