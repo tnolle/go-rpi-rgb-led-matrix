@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -34,10 +35,10 @@ func do(endpoint string, name string) error {
 		return err
 	}
 	defer res.Body.Close()
-	_, _ = io.Copy(io.Discard, res.Body)
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusMultipleChoices {
-		return fmt.Errorf("server returned %s", res.Status)
+		return decodeAPIError(res)
 	}
+	_, _ = io.Copy(io.Discard, res.Body)
 	return nil
 }
 
@@ -61,39 +62,53 @@ func hosts() []string {
 	return h
 }
 
-func ShowDashboard(name string) {
-	for _, h := range hosts() {
-		err := do(h+"/dashboard", name)
-		fmt.Println(h, err)
-	}
+func SetDashboard(name string) error {
+	return setOnHosts("dashboard", name)
 }
 
-func ShowImage(name string) {
-	for _, h := range hosts() {
-		err := do(h+"/image", name)
-		fmt.Println(h, err)
-	}
+func SetImage(name string) error {
+	return setOnHosts("image", name)
 }
 
-func ShowGIF(name string, once bool) {
+func SetGIF(name string, once bool) error {
+	endpoint := "gif"
 	if once {
-		for _, h := range hosts() {
-			err := do(h+"/gif-once", name)
-			fmt.Println(h, err)
-		}
-		return
+		endpoint = "gif-once"
 	}
-	for _, h := range hosts() {
-		err := do(h+"/gif", name)
-		fmt.Println(h, err)
-	}
+	return setOnHosts(endpoint, name)
 }
 
-func ShowAnimation(name string) {
+func SetAnimation(name string) error {
+	return setOnHosts("animation", name)
+}
+
+func setOnHosts(endpoint, name string) error {
+	var errs []error
 	for _, h := range hosts() {
-		err := do(h+"/animation", name)
-		fmt.Println(h, err)
+		if err := do(h+"/"+endpoint, name); err != nil {
+			errs = append(errs, fmt.Errorf("%s: %w", h, err))
+			continue
+		}
+		fmt.Println(h, "OK")
 	}
+	return errors.Join(errs...)
+}
+
+type apiError struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type apiErrorResponse struct {
+	Error apiError `json:"error"`
+}
+
+func decodeAPIError(res *http.Response) error {
+	var body apiErrorResponse
+	if err := json.NewDecoder(io.LimitReader(res.Body, 4096)).Decode(&body); err == nil && body.Error.Message != "" {
+		return errors.New(body.Error.Message)
+	}
+	return fmt.Errorf("server returned %s", res.Status)
 }
 
 type catalogResponse struct {

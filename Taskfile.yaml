@@ -8,12 +8,12 @@ tasks:
     cmds:
       - go -C go test ./...
 
-  terminal:
+  serve:
     cmds:
       - go -C go build -o ../.bin/server-terminal ./servers/terminal
       - ./.bin/server-terminal
 
-  cli:
+  led:
     cmds:
       - go -C go run ./clients/led -- {{.CLI_ARGS}}
 

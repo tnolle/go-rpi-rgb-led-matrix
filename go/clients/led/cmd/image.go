@@ -9,15 +9,16 @@ import (
 
 // imageCmd represents the image command
 var imageCmd = &cobra.Command{
-	Use: "image [name]",
-	Run: func(cmd *cobra.Command, args []string) {
-		ShowImage(args[0])
+	Use:   "image [name]",
+	Short: "Set the displayed image",
+	RunE: func(_ *cobra.Command, args []string) error {
+		return SetImage(args[0])
 	},
 	Args: cobra.ExactArgs(1),
 }
 
 func init() {
-	showCmd.AddCommand(imageCmd)
+	setCmd.AddCommand(imageCmd)
 
 	// Here you will define your flags and configuration settings.
 

@@ -11,16 +11,16 @@ import (
 // animationCmd represents the animation command
 var animationCmd = &cobra.Command{
 	Use:       "animation [name]",
-	Short:     "A brief description of your command",
+	Short:     "Set the displayed animation",
 	ValidArgs: animation.AnimationStrings(),
-	Run: func(cmd *cobra.Command, args []string) {
-		ShowAnimation(args[0])
+	RunE: func(_ *cobra.Command, args []string) error {
+		return SetAnimation(args[0])
 	},
 	Args: cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 }
 
 func init() {
-	showCmd.AddCommand(animationCmd)
+	setCmd.AddCommand(animationCmd)
 
 	// Here you will define your flags and configuration settings.
 

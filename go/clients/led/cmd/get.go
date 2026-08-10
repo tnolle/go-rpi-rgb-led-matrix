@@ -20,9 +20,9 @@ var catalogResources = []catalogResource{
 	{name: "animation", title: "Animations", endpoint: "/animations"},
 }
 
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List content available on the server",
+var getCmd = &cobra.Command{
+	Use:   "get",
+	Short: "Get available content from the server",
 	Args:  cobra.NoArgs,
 	RunE: func(_ *cobra.Command, _ []string) error {
 		return printCatalog(catalogResources, true)
@@ -30,12 +30,12 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(getCmd)
 	for _, resource := range catalogResources {
 		resource := resource
-		listCmd.AddCommand(&cobra.Command{
+		getCmd.AddCommand(&cobra.Command{
 			Use:   resource.name,
-			Short: "List available " + resource.title,
+			Short: "Get available " + resource.title,
 			Args:  cobra.NoArgs,
 			RunE: func(_ *cobra.Command, _ []string) error {
 				return printCatalog([]catalogResource{resource}, false)

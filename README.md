@@ -26,13 +26,25 @@ go -C go test ./...
 The CLI reads available content from the selected server:
 
 ```sh
-go -C go run ./clients/led list
-go -C go run ./clients/led list image
-go -C go run ./clients/led list gif
-go -C go run ./clients/led list dashboard
-go -C go run ./clients/led list animation
+go -C go run ./clients/led get
+go -C go run ./clients/led get image
+go -C go run ./clients/led get gif
+go -C go run ./clients/led get dashboard
+go -C go run ./clients/led get animation
+```
+
+Set the content displayed by the selected server:
+
+```sh
+go -C go run ./clients/led set image autodarts
+go -C go run ./clients/led set gif celebration
+go -C go run ./clients/led set gif --once success
+go -C go run ./clients/led set dashboard clock
+go -C go run ./clients/led set animation plasma
 ```
 
 The emulator expects `config.toml` and image assets under `images`. Both are intentionally ignored by Git.
 
 The Raspberry Pi server requires Linux, cgo, and the `with_cgo` build tag.
+
+The server's HTTP interface is documented in [docs/api.md](docs/api.md).

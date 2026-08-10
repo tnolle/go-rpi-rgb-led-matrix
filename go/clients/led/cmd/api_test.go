@@ -44,6 +44,20 @@ func TestDoEscapesName(t *testing.T) {
 	}
 }
 
+func TestDoReturnsStructuredAPIError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, `{"error":{"code":"animation_not_found","message":"animation \"unknown\" does not exist"}}`)
+	}))
+	defer server.Close()
+
+	err := do(server.URL+"/animation", "unknown")
+	if err == nil || err.Error() != `animation "unknown" does not exist` {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 func TestHostsDefaultsToLocalServer(t *testing.T) {
 	previousHosts := viper.GetStringSlice("hosts")
 	previousSelected := viper.GetInt("selectedHost")
