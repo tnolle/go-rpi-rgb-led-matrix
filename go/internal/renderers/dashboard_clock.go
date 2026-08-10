@@ -68,8 +68,6 @@ func (r *ClockRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error 
 			r.screen.ShowImage(ctx, dc.Image())
 		}
 	}
-
-	return nil
 }
 
 func pointOnCircle(center gg.Point, radius, angle float64) gg.Point {

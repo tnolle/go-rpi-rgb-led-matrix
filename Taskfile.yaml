@@ -4,6 +4,18 @@ vars:
   HOST: led
 
 tasks:
+  test:
+    cmds:
+      - go test ./go/...
+
+  emulator:
+    cmds:
+      - go run ./go/servers/emulator
+
+  cli:
+    cmds:
+      - go run ./go/clients/cli -- {{.CLI_ARGS}}
+
   build:
     cmds:
       - docker exec rgbmatrix-build-arm64-1 make build

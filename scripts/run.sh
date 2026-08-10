@@ -13,7 +13,7 @@ ROW_ADDR_TYPE=3
 
 
 function demo() {
-  sudo ./3rdparty/rpi-rgb-led-matrix/examples-api-use/demo \
+  sudo ./third_party/rpi-rgb-led-matrix/examples-api-use/demo \
     -D$MODE \
     --led-gpio-mapping=$GPIO_MAPPING \
     --led-cols=$COLS \
@@ -27,7 +27,7 @@ function demo() {
 }
 
 function autodarts() {
-  sudo ./3rdparty/rpi-rgb-led-matrix/examples-api-use/demo \
+  sudo ./third_party/rpi-rgb-led-matrix/examples-api-use/demo \
     -D1 -m0 images/out/autodarts.ppm \
     --led-gpio-mapping=$GPIO_MAPPING \
     --led-cols=$COLS \
@@ -43,7 +43,7 @@ function autodarts() {
 }
 
 function celonis() {
- sudo ./3rdparty/rpi-rgb-led-matrix/examples-api-use/demo \
+ sudo ./third_party/rpi-rgb-led-matrix/examples-api-use/demo \
    -D1 -m0 images/out/celonis.ppm \
    --led-gpio-mapping=$GPIO_MAPPING \
    --led-cols=$COLS \
@@ -59,7 +59,7 @@ function celonis() {
 }
 
 function text() {
-  sudo ./3rdparty/rpi-rgb-led-matrix/examples-api-use/text-example -f ./3rdparty/rpi-rgb-led-matrix/fonts/5x7.bdf \
+  sudo ./third_party/rpi-rgb-led-matrix/examples-api-use/text-example -f ./third_party/rpi-rgb-led-matrix/fonts/5x7.bdf \
       --led-gpio-mapping=$GPIO_MAPPING \
       --led-cols=$COLS \
       --led-rows=$ROWS \

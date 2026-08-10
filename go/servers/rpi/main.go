@@ -1,3 +1,5 @@
+//go:build linux && with_cgo
+
 package main
 
 import (

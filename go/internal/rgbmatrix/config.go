@@ -1,6 +1,7 @@
 package rgbmatrix
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -27,17 +28,23 @@ type Config struct {
 }
 
 func LoadConfig() Config {
-	path := "./config.toml"
+	config, err := LoadConfigFile("./config.toml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return config
+}
 
+func LoadConfigFile(path string) (Config, error) {
 	bytes, err := os.ReadFile(path)
 	if err != nil {
-		log.Fatal("No config file found", err)
+		return Config{}, fmt.Errorf("read config: %w", err)
 	}
 
 	var config Config
 	err = toml.Unmarshal(bytes, &config)
 	if err != nil {
-		log.Fatal("Error parsing config file", err)
+		return Config{}, fmt.Errorf("parse config: %w", err)
 	}
 
 	// Defaults
@@ -60,8 +67,8 @@ func LoadConfig() Config {
 		config.Options.Parallel = 1
 	}
 	if config.Dashboards.Font == "" {
-		config.Dashboards.Font = "fonts/7x14.bdf"
+		config.Dashboards.Font = "assets/fonts/7x14.bdf"
 	}
 
-	return config
+	return config, nil
 }
