@@ -6,6 +6,7 @@ This repository contains the current Go applications and will host their gradual
 
 - `go/servers/rpi`: production Raspberry Pi server
 - `go/servers/emulator`: macOS emulator server
+- `go/servers/terminal`: true-color terminal emulator server
 - `go/clients/cli`: command-line client
 - `go/internal`: packages shared by the Go applications
 - `rust`: incremental Rust replacements and new clients
@@ -20,6 +21,7 @@ The root `go.work` file makes it possible to run Go commands from the repository
 
 ```sh
 go run ./go/servers/emulator
+go run ./go/servers/terminal
 go run ./go/clients/cli --help
 go test ./go/...
 ```

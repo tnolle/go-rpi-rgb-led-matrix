@@ -12,6 +12,10 @@ tasks:
     cmds:
       - go run ./go/servers/emulator
 
+  terminal:
+    cmds:
+      - go run ./go/servers/terminal
+
   cli:
     cmds:
       - go run ./go/clients/cli -- {{.CLI_ARGS}}
