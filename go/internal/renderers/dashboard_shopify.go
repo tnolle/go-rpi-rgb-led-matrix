@@ -19,10 +19,24 @@ type ShopifyDashboardRenderer struct {
 	config rgbmatrix.Config
 }
 
-func ShopifyDashboard(screen *rgbmatrix.Screen) *ShopifyDashboardRenderer {
-	config := rgbmatrix.LoadConfig()
-	font, _ := rgbmatrix.LoadBDF(fmt.Sprintf(config.Dashboards.Font))
-	return &ShopifyDashboardRenderer{MatrixWriter: NewMatrixWriter(screen, font), config: config}
+func ShopifyDashboard(ctx context.Context, screen *rgbmatrix.Screen) (*ShopifyDashboardRenderer, error) {
+	config, err := rgbmatrix.LoadConfigFile("./config.toml")
+	if err != nil {
+		return nil, fmt.Errorf("load config: %w", err)
+	}
+	font, err := rgbmatrix.LoadBDF(config.Dashboards.Font)
+	if err != nil {
+		return nil, fmt.Errorf("load dashboard font: %w", err)
+	}
+	data, err := getTotalSales(ctx, config)
+	if err != nil {
+		return nil, fmt.Errorf("%w: load Shopify data: %v", ErrServiceUnavailable, err)
+	}
+	return &ShopifyDashboardRenderer{
+		MatrixWriter: NewMatrixWriter(screen, font),
+		Data:         data,
+		config:       config,
+	}, nil
 }
 
 func (r *ShopifyDashboardRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
@@ -55,7 +69,6 @@ func (r *ShopifyDashboardRenderer) Render(ctx context.Context, _ ...AfterRenderF
 		r.Flush()
 	}
 
-	r.Data, _ = getTotalSales(ctx, r.config)
 	draw()
 
 	for {

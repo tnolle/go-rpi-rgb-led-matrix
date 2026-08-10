@@ -43,6 +43,11 @@ func (c catalog) animations() []string {
 	return items
 }
 
+func contains(items []string, name string) bool {
+	index := sort.SearchStrings(items, name)
+	return index < len(items) && items[index] == name
+}
+
 func assetNames(dir, extension string) ([]string, error) {
 	entries, err := os.ReadDir(dir)
 	if errors.Is(err, os.ErrNotExist) {

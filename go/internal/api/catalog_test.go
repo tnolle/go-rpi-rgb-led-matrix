@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/display"
 	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/renderers"
 )
 
@@ -33,7 +34,7 @@ func TestAssetCatalogEndpoints(t *testing.T) {
 		}
 	}
 
-	handler := newHandler(make(chan renderers.Command), catalog{imagesDir: images, gifsDir: gifs})
+	handler := newHandler(make(chan renderers.Command), catalog{imagesDir: images, gifsDir: gifs}, display.NewHub())
 	assertCatalog(t, handler, "/images", []string{"alpha", "zebra"})
 	assertCatalog(t, handler, "/gifs", []string{"party"})
 }
@@ -42,13 +43,13 @@ func TestMissingAssetDirectoryReturnsEmptyCatalog(t *testing.T) {
 	handler := newHandler(make(chan renderers.Command), catalog{
 		imagesDir: filepath.Join(t.TempDir(), "missing"),
 		gifsDir:   filepath.Join(t.TempDir(), "missing"),
-	})
+	}, display.NewHub())
 	assertCatalog(t, handler, "/images", []string{})
 	assertCatalog(t, handler, "/gifs", []string{})
 }
 
 func TestRendererCatalogEndpoints(t *testing.T) {
-	handler := newHandler(make(chan renderers.Command), catalog{})
+	handler := newHandler(make(chan renderers.Command), catalog{}, display.NewHub())
 
 	request := httptest.NewRequest(http.MethodGet, "/dashboards", nil)
 	response := httptest.NewRecorder()

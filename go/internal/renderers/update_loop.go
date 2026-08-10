@@ -8,12 +8,14 @@ import (
 	"time"
 
 	"github.com/fogleman/gg"
-	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/renderers/animation"
-	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/renderers/dashboard"
+	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/display"
 	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/rgbmatrix"
 )
 
-func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) {
+func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix, frames *display.Hub) {
+	if frames != nil {
+		m = rgbmatrix.NewObservable(m, frames.Publish)
+	}
 	s := rgbmatrix.NewScreen(m)
 	defer s.Close()
 
@@ -32,135 +34,51 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix) 
 			cancel()
 			return
 		case cmd := <-commands:
+			prepareCtx := cmd.Context
+			if prepareCtx == nil {
+				prepareCtx = ctx
+			}
+			prepared, err := prepare(prepareCtx, cmd, s)
+			if err != nil {
+				respond(cmd, err)
+				continue
+			}
+
 			cancel()
 			renderCtx, cancel = context.WithCancel(ctx)
-
+			callbacks := []AfterRenderFunc(nil)
+			if cmd.IsTemporary {
+				callbacks = append(callbacks, resetScreen)
+			}
+			if err := prepared.start(renderCtx, callbacks...); err != nil {
+				respond(cmd, err)
+				continue
+			}
 			if !cmd.IsTemporary {
 				lastCommand = cmd
+				lastCommand.Context = nil
+				lastCommand.Result = nil
 			}
-			switch cmd.Type {
-			case TypePlayground:
-				go MarbleShader(s).Render(renderCtx)
-
-			case TypeImage:
-				Image(s, cmd.Name).Render(renderCtx)
-			case TypeGIF:
-				GIFLoop(s, cmd.Name).Render(renderCtx)
-			case TypeGIFOnce:
-				GIFOnce(s, cmd.Name).Render(renderCtx, resetScreen)
-
-			case TypeDashboard:
-				v, err := dashboard.DashboardString(cmd.Name)
-				if err != nil {
-					fmt.Printf("Error: %s\n", err)
-					continue
-				}
-
-				switch v {
-				case dashboard.Clock:
-					go Clock(s).Render(renderCtx)
-				case dashboard.Autodarts:
-					go UserCountDashboard(s).Render(renderCtx)
-				case dashboard.Shopify:
-					go ShopifyDashboard(s).Render(renderCtx)
-				}
-
-			case TypeAnimation:
-				v, err := animation.AnimationString(cmd.Name)
-				if err != nil {
-					fmt.Printf("Error: %s\n", err)
-					continue
-				}
-
-				switch v {
-				case animation.Aurora:
-					go Aurora(s).Render(renderCtx)
-				case animation.Checkerboard:
-					go Checkerboard(s).Render(renderCtx)
-				case animation.ColorWave:
-					go ColorWave(s).Render(renderCtx)
-				case animation.BlobbyFusion:
-					go BlobbyFusion(s).Render(renderCtx)
-				case animation.Firefly:
-					go Firefly(s).Render(renderCtx)
-				case animation.Kaleidoscope:
-					go Kaleidoscope(s).Render(renderCtx)
-				case animation.LavaLamp:
-					go LavaLamp(s).Render(renderCtx)
-				case animation.Lightning:
-					go Lightning(s).Render(renderCtx)
-				case animation.Mandelbrot:
-					go Mandelbrot(s).Render(renderCtx)
-				case animation.MatrixRain:
-					go MatrixRain(s).Render(renderCtx)
-				case animation.Nebula:
-					go Nebula(s).Render(renderCtx)
-				case animation.Plasma:
-					go Plasma(s).Render(renderCtx)
-				case animation.RadarSweep:
-					go RadarSweep(s).Render(renderCtx)
-				case animation.Ripple:
-					go Ripple(s).Render(renderCtx)
-				case animation.Spectrum:
-					go Spectrum(s).Render(renderCtx)
-				case animation.Spiral:
-					go Spiral(s).Render(renderCtx)
-				case animation.Starfield:
-					go Starfield(s).Render(renderCtx)
-				case animation.Tunnel:
-					go Tunnel(s).Render(renderCtx)
-				case animation.Vortex:
-					go Vortex(s).Render(renderCtx)
-				case animation.PixelBloom:
-					go PixelBloom(s).Render(renderCtx)
-				case animation.RGBFlow:
-					go RGBFlow(s).Render(renderCtx)
-				case animation.Glitch:
-					go Glitch(s).Render(renderCtx)
-				case animation.HypnoticRings:
-					go HypnoticRings(s).Render(renderCtx)
-				case animation.SpinningGrid:
-					go SpinningGrid(s).Render(renderCtx)
-				case animation.HexPulse:
-					go HexPulse(s).Render(renderCtx)
-				case animation.SnakeTrail:
-					go SnakeTrail(s).Render(renderCtx)
-				case animation.ExplosionBurst:
-					go ExplosionBurst(s).Render(renderCtx)
-				case animation.BeatGrid:
-					go BeatGrid(s).Render(renderCtx)
-				case animation.AudioOrbit:
-					go AudioOrbit(s).Render(renderCtx)
-				case animation.AuroraCurtains:
-					go AuroraCurtains(s).Render(renderCtx)
-				case animation.UlamSpiral:
-					go UlamSpiral(s).Render(renderCtx)
-				case animation.GameOfLife:
-					go GameOfLife(s).Render(renderCtx)
-				case animation.VectorFieldFlow:
-					go VectorFieldFlow(s).Render(renderCtx)
-				case animation.SierpinskiTriangle:
-					go SierpinskiTriangle(s).Render(renderCtx)
-				case animation.FluidDream:
-					go FluidDream(s).Render(renderCtx)
-				case animation.FluidRainbow:
-					go FluidRainbow(s).Render(renderCtx)
-				case animation.OrbitingMetaballs:
-					go OrbitingMetaballs(s).Render(renderCtx)
-				case animation.MarbleShader:
-					go MarbleShader(s).Render(renderCtx)
-				}
-
-			}
+			respond(cmd, nil)
 		}
 	}
 }
 
-func UpdateLoopTerminal(ctx context.Context, commands chan Command, config rgbmatrix.Config) {
+func respond(cmd Command, err error) {
+	if cmd.Result == nil {
+		return
+	}
+	select {
+	case cmd.Result <- err:
+	default:
+	}
+}
+
+func UpdateLoopTerminal(ctx context.Context, commands chan Command, config rgbmatrix.Config, frames *display.Hub) {
 	width := config.Options.Cols * config.Options.ChainLength
 	height := config.Options.Rows * config.Options.Parallel
 	fmt.Fprintf(os.Stderr, "Emulating a %dx%d matrix in the terminal\n", width, height)
-	updateLoop(ctx, commands, rgbmatrix.NewTerminal(width, height))
+	updateLoop(ctx, commands, rgbmatrix.NewTerminal(width, height), frames)
 }
 
 type SoftBloomRingsRenderer struct {

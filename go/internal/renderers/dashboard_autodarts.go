@@ -19,25 +19,28 @@ type UserCountDashboardRenderer struct {
 	c          *autodarts.AutodartsWSClient
 }
 
-func UserCountDashboard(screen *rgbmatrix.Screen) *UserCountDashboardRenderer {
-	config := rgbmatrix.LoadConfig()
-	font, _ := rgbmatrix.LoadBDF(fmt.Sprintf(config.Dashboards.Font))
-	c := autodarts.NewAutodartsWSClient()
-	err := c.Connect()
+func UserCountDashboard(screen *rgbmatrix.Screen) (*UserCountDashboardRenderer, error) {
+	config, err := rgbmatrix.LoadConfigFile("./config.toml")
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("load config: %w", err)
 	}
-	return &UserCountDashboardRenderer{MatrixWriter: NewMatrixWriter(screen, font)}
+	font, err := rgbmatrix.LoadBDF(config.Dashboards.Font)
+	if err != nil {
+		return nil, fmt.Errorf("load dashboard font: %w", err)
+	}
+	c := autodarts.NewAutodartsWSClient()
+	if err := c.Connect(); err != nil {
+		return nil, fmt.Errorf("%w: connect to Autodarts: %v", ErrServiceUnavailable, err)
+	}
+	return &UserCountDashboardRenderer{MatrixWriter: NewMatrixWriter(screen, font), c: c}, nil
 }
 
 func (r *UserCountDashboardRenderer) Render(ctx context.Context, _ ...AfterRenderFunc) error {
 	r.UserCount = autodarts.NewAutodartsAPIClient().GetOnlineUsers()
 	r.MatchCount = autodarts.NewAutodartsAPIClient().GetNumMatches()
-	ws := autodarts.NewAutodartsWSClient()
-	ws.Connect()
 	p := message.NewPrinter(language.English)
-	onUsers := ws.OnOnlineUsersChange(ctx)
-	onMatch := ws.OnMatchCountChange(ctx)
+	onUsers := r.c.OnOnlineUsersChange(ctx)
+	onMatch := r.c.OnMatchCountChange(ctx)
 
 	blue := color.RGBA{0, 0, 200, 255}
 	white := color.RGBA{200, 200, 200, 255}
