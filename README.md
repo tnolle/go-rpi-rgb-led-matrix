@@ -43,6 +43,14 @@ go -C go run ./clients/led set dashboard clock
 go -C go run ./clients/led set animation plasma
 ```
 
+Mirror the selected server's live display in the terminal (press `Ctrl-C` to
+exit), or connect to a server directly with `--host`:
+
+```sh
+go -C go run ./clients/led display
+go -C go run ./clients/led display --host http://localhost:8085
+```
+
 The emulator expects `config.toml` and image assets under `images`. Both are intentionally ignored by Git.
 
 The Raspberry Pi server requires Linux, cgo, and the `with_cgo` build tag.

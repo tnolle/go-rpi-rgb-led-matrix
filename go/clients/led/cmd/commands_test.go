@@ -2,12 +2,15 @@ package cmd
 
 import "testing"
 
-func TestRootUsesGetAndSetCommands(t *testing.T) {
+func TestRootCommands(t *testing.T) {
 	if command, _, err := rootCmd.Find([]string{"get"}); err != nil || command != getCmd {
 		t.Fatalf("get command not registered: command=%v err=%v", command, err)
 	}
 	if command, _, err := rootCmd.Find([]string{"set"}); err != nil || command != setCmd {
 		t.Fatalf("set command not registered: command=%v err=%v", command, err)
+	}
+	if command, _, err := rootCmd.Find([]string{"display"}); err != nil || command != displayCmd {
+		t.Fatalf("display command not registered: command=%v err=%v", command, err)
 	}
 
 	for _, oldName := range []string{"list", "show"} {
