@@ -1,4 +1,4 @@
-//go:generate go run github.com/dmarkham/enumer -type=Animation -transform=kebab
+//go:generate go run github.com/dmarkham/enumer@v1.6.3 -type=Animation -transform=kebab
 
 package animation
 
@@ -43,4 +43,6 @@ const (
 	FluidRainbow
 	OrbitingMetaballs
 	MarbleShader
+	SolarSystem
+	Darts_180
 )

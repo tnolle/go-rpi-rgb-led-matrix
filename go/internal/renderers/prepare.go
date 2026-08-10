@@ -112,6 +112,8 @@ func prepareAnimation(name string, screen *rgbmatrix.Screen) (preparedRenderer, 
 		animation.FluidRainbow:       func(s *rgbmatrix.Screen) Renderer { return FluidRainbow(s) },
 		animation.OrbitingMetaballs:  func(s *rgbmatrix.Screen) Renderer { return OrbitingMetaballs(s) },
 		animation.MarbleShader:       func(s *rgbmatrix.Screen) Renderer { return MarbleShader(s) },
+		animation.SolarSystem:        func(s *rgbmatrix.Screen) Renderer { return SolarSystem(s) },
+		animation.Darts_180:          func(s *rgbmatrix.Screen) Renderer { return Darts180(s) },
 	}
 	factory, ok := factories[value]
 	if !ok {

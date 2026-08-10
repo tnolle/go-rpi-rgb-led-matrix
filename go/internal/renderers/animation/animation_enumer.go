@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _AnimationName = "aurorablobby-fusioncheckerboardcolor-wavefireflykaleidoscopelava-lamplightningmandelbrotmatrix-rainnebulaplasmaradar-sweepripplespectrumspiralstarfieldtunnelvortexpixel-bloomrgb-flowglitchhypnotic-ringsspinning-gridhex-pulsesnake-trailexplosion-burstbeat-gridaudio-orbitaurora-curtainsulam-spiralgame-of-lifevector-field-flowsierpinski-trianglefluid-dreamfluid-rainboworbiting-metaballsmarble-shader"
+const _AnimationName = "aurorablobby-fusioncheckerboardcolor-wavefireflykaleidoscopelava-lamplightningmandelbrotmatrix-rainnebulaplasmaradar-sweepripplespectrumspiralstarfieldtunnelvortexpixel-bloomrgb-flowglitchhypnotic-ringsspinning-gridhex-pulsesnake-trailexplosion-burstbeat-gridaudio-orbitaurora-curtainsulam-spiralgame-of-lifevector-field-flowsierpinski-trianglefluid-dreamfluid-rainboworbiting-metaballsmarble-shadersolar-systemdarts-180"
 
-var _AnimationIndex = [...]uint16{0, 6, 19, 31, 41, 48, 60, 69, 78, 88, 99, 105, 111, 122, 128, 136, 142, 151, 157, 163, 174, 182, 188, 202, 215, 224, 235, 250, 259, 270, 285, 296, 308, 325, 344, 355, 368, 386, 399}
+var _AnimationIndex = [...]uint16{0, 6, 19, 31, 41, 48, 60, 69, 78, 88, 99, 105, 111, 122, 128, 136, 142, 151, 157, 163, 174, 182, 188, 202, 215, 224, 235, 250, 259, 270, 285, 296, 308, 325, 344, 355, 368, 386, 399, 411, 420}
 
-const _AnimationLowerName = "aurorablobby-fusioncheckerboardcolor-wavefireflykaleidoscopelava-lamplightningmandelbrotmatrix-rainnebulaplasmaradar-sweepripplespectrumspiralstarfieldtunnelvortexpixel-bloomrgb-flowglitchhypnotic-ringsspinning-gridhex-pulsesnake-trailexplosion-burstbeat-gridaudio-orbitaurora-curtainsulam-spiralgame-of-lifevector-field-flowsierpinski-trianglefluid-dreamfluid-rainboworbiting-metaballsmarble-shader"
+const _AnimationLowerName = "aurorablobby-fusioncheckerboardcolor-wavefireflykaleidoscopelava-lamplightningmandelbrotmatrix-rainnebulaplasmaradar-sweepripplespectrumspiralstarfieldtunnelvortexpixel-bloomrgb-flowglitchhypnotic-ringsspinning-gridhex-pulsesnake-trailexplosion-burstbeat-gridaudio-orbitaurora-curtainsulam-spiralgame-of-lifevector-field-flowsierpinski-trianglefluid-dreamfluid-rainboworbiting-metaballsmarble-shadersolar-systemdarts-180"
 
 func (i Animation) String() string {
 	if i < 0 || i >= Animation(len(_AnimationIndex)-1) {
@@ -62,9 +62,11 @@ func _AnimationNoOp() {
 	_ = x[FluidRainbow-(35)]
 	_ = x[OrbitingMetaballs-(36)]
 	_ = x[MarbleShader-(37)]
+	_ = x[SolarSystem-(38)]
+	_ = x[Darts_180-(39)]
 }
 
-var _AnimationValues = []Animation{Aurora, BlobbyFusion, Checkerboard, ColorWave, Firefly, Kaleidoscope, LavaLamp, Lightning, Mandelbrot, MatrixRain, Nebula, Plasma, RadarSweep, Ripple, Spectrum, Spiral, Starfield, Tunnel, Vortex, PixelBloom, RGBFlow, Glitch, HypnoticRings, SpinningGrid, HexPulse, SnakeTrail, ExplosionBurst, BeatGrid, AudioOrbit, AuroraCurtains, UlamSpiral, GameOfLife, VectorFieldFlow, SierpinskiTriangle, FluidDream, FluidRainbow, OrbitingMetaballs, MarbleShader}
+var _AnimationValues = []Animation{Aurora, BlobbyFusion, Checkerboard, ColorWave, Firefly, Kaleidoscope, LavaLamp, Lightning, Mandelbrot, MatrixRain, Nebula, Plasma, RadarSweep, Ripple, Spectrum, Spiral, Starfield, Tunnel, Vortex, PixelBloom, RGBFlow, Glitch, HypnoticRings, SpinningGrid, HexPulse, SnakeTrail, ExplosionBurst, BeatGrid, AudioOrbit, AuroraCurtains, UlamSpiral, GameOfLife, VectorFieldFlow, SierpinskiTriangle, FluidDream, FluidRainbow, OrbitingMetaballs, MarbleShader, SolarSystem, Darts_180}
 
 var _AnimationNameToValueMap = map[string]Animation{
 	_AnimationName[0:6]:          Aurora,
@@ -143,6 +145,10 @@ var _AnimationNameToValueMap = map[string]Animation{
 	_AnimationLowerName[368:386]: OrbitingMetaballs,
 	_AnimationName[386:399]:      MarbleShader,
 	_AnimationLowerName[386:399]: MarbleShader,
+	_AnimationName[399:411]:      SolarSystem,
+	_AnimationLowerName[399:411]: SolarSystem,
+	_AnimationName[411:420]:      Darts_180,
+	_AnimationLowerName[411:420]: Darts_180,
 }
 
 var _AnimationNames = []string{
@@ -184,6 +190,8 @@ var _AnimationNames = []string{
 	_AnimationName[355:368],
 	_AnimationName[368:386],
 	_AnimationName[386:399],
+	_AnimationName[399:411],
+	_AnimationName[411:420],
 }
 
 // AnimationString retrieves an enum value from the enum constants string name.
