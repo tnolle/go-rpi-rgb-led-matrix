@@ -13,6 +13,25 @@ const (
 	TypeAnimation
 )
 
+func (t ScreenType) String() string {
+	switch t {
+	case TypeImage:
+		return "image"
+	case TypeGIF:
+		return "gif"
+	case TypeGIFOnce:
+		return "gif-once"
+	case TypeDashboard:
+		return "dashboard"
+	case TypePlayground:
+		return "playground"
+	case TypeAnimation:
+		return "animation"
+	default:
+		return "unknown"
+	}
+}
+
 type Command struct {
 	Type        ScreenType
 	Name        string

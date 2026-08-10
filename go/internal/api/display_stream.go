@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -33,9 +34,12 @@ func displayStreamHandler(hub *display.Hub) http.HandlerFunc {
 
 		connection, err := streamUpgrader.Upgrade(w, r, nil)
 		if err != nil {
+			log.Printf("display stream upgrade failed: remote=%s error=%v", r.RemoteAddr, err)
 			return
 		}
 		defer connection.Close()
+		log.Printf("display stream connected: remote=%s", r.RemoteAddr)
+		defer log.Printf("display stream disconnected: remote=%s", r.RemoteAddr)
 
 		connection.SetReadLimit(1024)
 		_ = connection.SetReadDeadline(time.Now().Add(streamPongTimeout))

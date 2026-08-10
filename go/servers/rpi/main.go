@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/api"
 	"github.com/tnolle/go-rpi-rgb-led-matrix/internal/display"
@@ -23,6 +24,9 @@ func main() {
 
 	// Config
 	config := rgbmatrix.LoadConfig()
+	width := config.Options.Cols * config.Options.ChainLength
+	height := config.Options.Rows * config.Options.Parallel
+	log.Printf("server starting: matrix=%dx%d output=raspberry-pi", width, height)
 
 	// Keycloak
 	keycloak.Init(config.Auth.ClientID, config.Auth.ClientSecret)

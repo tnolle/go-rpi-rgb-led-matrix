@@ -53,6 +53,13 @@ go -C go run ./clients/led display --host http://localhost:8085
 
 The emulator expects `config.toml` and image assets under `images`. Both are intentionally ignored by Git.
 
+The terminal server runs headlessly by default. Pass `--display` to also render
+the matrix in the server's own terminal:
+
+```sh
+go -C go run ./servers/terminal --display
+```
+
 The Raspberry Pi server requires Linux, cgo, and the `with_cgo` build tag.
 
 The server's HTTP interface is documented in [docs/api.md](docs/api.md).

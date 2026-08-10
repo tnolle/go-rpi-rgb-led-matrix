@@ -22,6 +22,7 @@ func ListenAndServe(commands chan renderers.Command, frames *display.Hub) {
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
+	log.Printf("HTTP API listening on %s", server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
 

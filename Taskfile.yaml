@@ -11,7 +11,7 @@ tasks:
   serve:
     cmds:
       - go -C go build -o ../.bin/server-terminal ./servers/terminal
-      - ./.bin/server-terminal
+      - ./.bin/server-terminal {{.CLI_ARGS}}
 
   led:
     cmds:

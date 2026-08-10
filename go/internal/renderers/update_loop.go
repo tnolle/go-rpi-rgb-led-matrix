@@ -2,9 +2,8 @@ package renderers
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"math"
-	"os"
 	"time"
 
 	"github.com/fogleman/gg"
@@ -18,6 +17,8 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix, 
 	}
 	s := rgbmatrix.NewScreen(m)
 	defer s.Close()
+	width, height := m.Geometry()
+	log.Printf("renderer loop started: matrix=%dx%d streaming=%t", width, height, frames != nil)
 
 	go func() { commands <- Command{Type: TypeImage, Name: "autodarts"} }()
 	//go func() { commands <- Command{Type: TypeDashboard, Name: dashboard.Shopify.String()} }()
@@ -31,15 +32,18 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix, 
 	for {
 		select {
 		case <-ctx.Done():
+			log.Printf("renderer loop stopping")
 			cancel()
 			return
 		case cmd := <-commands:
+			log.Printf("renderer requested: type=%s name=%q temporary=%t", cmd.Type, cmd.Name, cmd.IsTemporary)
 			prepareCtx := cmd.Context
 			if prepareCtx == nil {
 				prepareCtx = ctx
 			}
 			prepared, err := prepare(prepareCtx, cmd, s)
 			if err != nil {
+				log.Printf("renderer rejected: type=%s name=%q error=%v", cmd.Type, cmd.Name, err)
 				respond(cmd, err)
 				continue
 			}
@@ -51,6 +55,7 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix, 
 				callbacks = append(callbacks, resetScreen)
 			}
 			if err := prepared.start(renderCtx, callbacks...); err != nil {
+				log.Printf("renderer failed to start: type=%s name=%q error=%v", cmd.Type, cmd.Name, err)
 				respond(cmd, err)
 				continue
 			}
@@ -59,6 +64,7 @@ func updateLoop(ctx context.Context, commands chan Command, m rgbmatrix.Matrix, 
 				lastCommand.Context = nil
 				lastCommand.Result = nil
 			}
+			log.Printf("renderer started: type=%s name=%q temporary=%t", cmd.Type, cmd.Name, cmd.IsTemporary)
 			respond(cmd, nil)
 		}
 	}
@@ -74,11 +80,8 @@ func respond(cmd Command, err error) {
 	}
 }
 
-func UpdateLoopTerminal(ctx context.Context, commands chan Command, config rgbmatrix.Config, frames *display.Hub) {
-	width := config.Options.Cols * config.Options.ChainLength
-	height := config.Options.Rows * config.Options.Parallel
-	fmt.Fprintf(os.Stderr, "Emulating a %dx%d matrix in the terminal\n", width, height)
-	updateLoop(ctx, commands, rgbmatrix.NewTerminal(width, height), frames)
+func UpdateLoopWithMatrix(ctx context.Context, commands chan Command, matrix rgbmatrix.Matrix, frames *display.Hub) {
+	updateLoop(ctx, commands, matrix, frames)
 }
 
 type SoftBloomRingsRenderer struct {
