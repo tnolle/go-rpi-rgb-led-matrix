@@ -6,15 +6,16 @@ vars:
 tasks:
   test:
     cmds:
-      - go test ./go/...
+      - go -C go test ./...
 
   terminal:
     cmds:
-      - go run ./go/servers/terminal
+      - go -C go build -o ../.bin/server-terminal ./servers/terminal
+      - ./.bin/server-terminal
 
   cli:
     cmds:
-      - go run ./go/clients/led -- {{.CLI_ARGS}}
+      - go -C go run ./clients/led -- {{.CLI_ARGS}}
 
   build:
     cmds:

@@ -14,24 +14,23 @@ This repository contains the current Go applications and will host their gradual
 - `deployments`: service definitions
 - `scripts`: development and hardware helper scripts
 
-The root `go.work` file makes it possible to run Go commands from the repository root.
-
 ## Development
 
 ```sh
-go run ./go/servers/terminal
-go run ./go/clients/led --help
-go test ./go/...
+go -C go build -o ../.bin/server-terminal ./servers/terminal
+./.bin/server-terminal
+go -C go run ./clients/led --help
+go -C go test ./...
 ```
 
 The CLI reads available content from the selected server:
 
 ```sh
-go run ./go/clients/led list
-go run ./go/clients/led list image
-go run ./go/clients/led list gif
-go run ./go/clients/led list dashboard
-go run ./go/clients/led list animation
+go -C go run ./clients/led list
+go -C go run ./clients/led list image
+go -C go run ./clients/led list gif
+go -C go run ./clients/led list dashboard
+go -C go run ./clients/led list animation
 ```
 
 The emulator expects `config.toml` and image assets under `images`. Both are intentionally ignored by Git.
