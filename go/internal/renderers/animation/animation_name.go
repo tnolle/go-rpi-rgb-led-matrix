@@ -45,4 +45,5 @@ const (
 	MarbleShader
 	SolarSystem
 	Darts_180
+	Pacman
 )
